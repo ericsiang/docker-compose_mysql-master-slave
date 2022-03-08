@@ -1,0 +1,29 @@
+version: '3.8'
+
+
+services:
+
+  slave:
+    image: mysql:5.7.31
+    restart: always
+    privileged: true
+    ports:
+      - 3308:3306
+    volumes:
+      - ./conf:/etc/mysql
+      - ./data:/var/lib/mysql
+      - ./log:/var/log/mysql/
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+    command: [
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_general_ci',
+        '--max_connections=3000'
+    ]
+    networks:
+      - master_slave  
+
+networks:
+  master_slave:
+    driver: bridge 
+    name: master_slave

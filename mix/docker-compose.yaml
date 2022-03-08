@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  master:
+    image: mysql:5.7.31
+    restart: always
+    privileged: true
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+    volumes:
+      - ./master/conf:/etc/mysql
+      - ./master/data:/var/lib/mysql
+      - ./master/log:/var/log/mysql/
+    networks:
+      - master_slave_web  
+  slave:
+    image: mysql:5.7.31
+    restart: always
+    privileged: true
+    ports:
+      - 3308:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+    volumes:
+      - ./slave/conf:/etc/mysql
+      - ./slave/data:/var/lib/mysql
+      - ./slave/log:/var/log/mysql/
+    networks:
+      - master_slave_web    
+
+networks:
+  master_slave_web:
+    driver: bridge
+    name: master_slave_web
